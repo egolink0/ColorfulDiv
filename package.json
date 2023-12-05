@@ -1,14 +1,14 @@
 {
   "name": "colorful-div",
   "description": "editable div with colorful special words",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "keywords": [
     "div",
     "editable",
     "colorful"
   ],
   "type": "module",
-  "main": "src/ColorfulDiv.tsx",
+  "main": "dist/lib.umd.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

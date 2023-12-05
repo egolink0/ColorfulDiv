@@ -1,0 +1,6 @@
+public/
+src/
+
+*.html
+*.css
+*.svg
