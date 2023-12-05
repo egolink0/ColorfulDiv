@@ -1,16 +1,17 @@
 {
   "name": "colorful-div",
   "description": "editable div with colorful special words",
-  "version": "1.0.5",
+  "version": "1.0.6",
+  "license": "MIT",
   "keywords": [
-    "div",
-    "editable",
-    "colorful"
+    "react",
+    "editable div",
+    "colorful text"
   ],
   "type": "module",
   "main": "dist/lib.umd.js",
   "files": [
-    "dist/lib.umd.js"
+    "dist/*"
   ],
   "scripts": {
     "dev": "vite",
