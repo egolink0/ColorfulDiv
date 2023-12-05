@@ -1,8 +1,6 @@
 {
   "name": "colorful-div",
-  "private": true,
   "description": "editable div with colorful special words",
-  "author": "egolink",
   "version": "1.0.0",
   "keywords": [
     "div",
@@ -10,6 +8,7 @@
     "colorful"
   ],
   "type": "module",
+  "main": "src/ColorfulDiv.tsx",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -31,5 +30,10 @@
     "eslint-plugin-react-refresh": "^0.4.4",
     "typescript": "^5.2.2",
     "vite": "^5.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/egolink0/ColorfulDiv.git"
+  },
+  "bugs": "https://github.com/egolink0/ColorfulDiv/issues"
 }

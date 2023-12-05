@@ -1,11 +1,11 @@
-import React, { StrictMode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import ColorfulDiv from "./ColorfulDiv";
 
 const rootElement = document.getElementById("root");
-const root = createRoot(rootElement);
+const root = rootElement && createRoot(rootElement);
 
-root.render(
+root?.render(
   <StrictMode>
     <ColorfulDiv
       value="[张三]去了一趟理塘，[李四]去了一趟丽江。"

@@ -1,30 +1,20 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "./ColorfulDiv.css";
 
-interface Props {
-  value?: string;
-  color?: string;
-  list?: string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
-}
-
-const ColorfulDiv: React.FC<Props> = ({
+const ColorfulDiv = ({
   value: initialValue = "",
   color = "#1E90FF",
   list = [],
   ...rest
 }) => {
-  const divRef = useRef();
+  const divRef = useRef(null);
   const dataSourceMap = useMemo(() => {
     return list.reduce((o, l) => ({ ...o, [l]: 1 }), {});
   }, [list]);
 
-  console.log("dataSourceMap", dataSourceMap);
-
   // 闭包存数据
   const cacheIndex = useMemo(() => {
-    let value = undefined;
+    let value = undefined ;
     return (v) => {
       if (v !== undefined) value = v;
       else return value;
@@ -32,7 +22,7 @@ const ColorfulDiv: React.FC<Props> = ({
   }, []);
 
   // 匹配中括号内的内容，判断是否是名称
-  const isAWord = (str, allData = {}) => {
+  const isAWord = (str = "", allData = {}) => {
     const m = str.match(/\[(.*?)\]/)?.[1];
     if (m && allData[m]) return true;
     return false;
@@ -40,7 +30,7 @@ const ColorfulDiv: React.FC<Props> = ({
 
   // 将名称用 font 包裹
   // (这位是[张三]  => 这位是<font color="#1E90FF">[张三]</font>)
-  const matchColor = (text, allData) => {
+  const matchColor = (text = "", allData) => {
     let item = "";
     let result = "";
     for (const c of text) {
@@ -61,18 +51,21 @@ const ColorfulDiv: React.FC<Props> = ({
   };
 
   // 将纯文本数据，结构化，之后重新塞到 div 的 innerHTML 里面渲染出来
-  const resetDivHTML = (v) => {
+  const resetDivHTML = (v = "") => {
     const innerHTML = matchColor(v, dataSourceMap);
     divRef.current.innerHTML = innerHTML;
   };
 
   // 根据旧的锚点位置获取新的锚点 node 和 offset
-  const getNewAnchorData = (oldIndex, divRef) => {
+  const getNewAnchorData = (oldIndex) => {
+    if (!divRef) return {};
+
     let newAnchorNode;
     let newAnchorOffset;
     let len = 0;
     const newNodes = divRef.current.childNodes;
     newNodes.forEach((n) => {
+      if (!n) return;
       const { nodeName, textContent, childNodes, innerText } = n;
       const isFont = nodeName === "FONT";
       // 如果是 font 需要取 innerText
@@ -89,15 +82,15 @@ const ColorfulDiv: React.FC<Props> = ({
     // 没有就设置到输入的文案最末尾元素
     if (!newAnchorNode) {
       newAnchorNode = divRef.current;
-      newAnchorOffset = divRef.current.childNodes.length;
+      newAnchorOffset = divRef.current?.childNodes?.length;
     }
     return { newAnchorNode, newAnchorOffset };
   };
 
   // 记住此时的光标位置
-  const getAnchorPosition = (divRef) => {
+  const getAnchorPosition = () => {
     const selection = window.getSelection();
-    const { anchorOffset, anchorNode } = selection; // 当前光标所在的 node,以及 offset
+    const { anchorOffset, anchorNode } = selection ; // 当前光标所在的 node,以及 offset
     const divChildNodes = divRef.current.childNodes;
     let anchorIndex = 0; // 光标的位置
     for (const n of divChildNodes) {
@@ -115,19 +108,22 @@ const ColorfulDiv: React.FC<Props> = ({
 
   // 先格式化整个文本，再把光标塞进去
   const onInput = (e) => {
+    if (!divRef?.current) return;
+
     const newText = e.target.innerText;
     // 根据旧的 dom 结构，记住此处旧版光标的位置
-    const anchorIndex = getAnchorPosition(divRef);
+    const anchorIndex = getAnchorPosition();
+    if (anchorIndex === undefined) return;
+
     // 设置将数据重新 set 进入 div，生成新的 dom 结构
     resetDivHTML(newText);
     // 根据旧的锚点位置，重新算出在此时最新的锚点应该在哪个 node 和哪个 offset
-    const { newAnchorNode, newAnchorOffset } = getNewAnchorData(
-      anchorIndex,
-      divRef
-    );
+    const { newAnchorNode, newAnchorOffset } = getNewAnchorData(anchorIndex);
 
     // 将光标塞到计算出的新的位置
-    const selection = window.getSelection();
+    const selection = window.getSelection() ;
+
+    if (!selection) return;
     selection.removeAllRanges(); // 将现在的 selection 选区中光标的选择范围全部清除
 
     const range = document.createRange(); // 生成一个光标选择范围
@@ -140,7 +136,10 @@ const ColorfulDiv: React.FC<Props> = ({
   };
 
   const onBlur = () => {
-    const anchorIndex = getAnchorPosition(divRef);
+    if (!divRef?.current) return;
+
+    const anchorIndex = getAnchorPosition();
+    if (anchorIndex === undefined) return;
     cacheIndex(anchorIndex);
     setTimeout(() => {
       // 1 秒之内操作，默认为是点击了名称加入到当前焦点位置
