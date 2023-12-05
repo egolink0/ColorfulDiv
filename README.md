@@ -18,7 +18,7 @@ import ColorfulDiv from "colorful-div";
 ```
 
 ## Demo gif
-![demo](./demo.png)
+![demo](./demo.gif)
 
 ## License
 ```text
