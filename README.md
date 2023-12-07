@@ -20,6 +20,9 @@ import ColorfulDiv from "colorful-div";
 ## Demo gif
 ![demo](./demo.gif)
 
+
+## 实现原理
+[可编辑 div，名称染色交互方案](https://juejin.cn/post/7293021170256019468)
 ## License
 ```text
 MIT License
